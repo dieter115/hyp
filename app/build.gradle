@@ -1,30 +1,164 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+apply plugin: 'io.fabric'
+apply plugin: 'let'
+apply plugin: 'realm-android'
 
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven {
+        url "http://dl.bintray.com/iravul/maven"
+    }
+}
+
+// define build version
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0
+
+/**
+ * Check if a signing.gradle file exists and import it
+ */
+if (file(rootProject.projectDir.getAbsolutePath() + '/signing.gradle').exists()) {
+    apply from: rootProject.projectDir.getAbsolutePath() + '/signing.gradle'
+}
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "23.0.3"
+
     defaultConfig {
-        applicationId "be.flashapps.hyp"
+        applicationId "be.appwise.centerparcs"
         minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        targetSdkVersion 23
+
+        // generate versionCode and versionName from defined major, minor, versionPatch, versionBuild
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+
+        dexOptions {
+            preDexLibraries true
+            javaMaxHeapSize "4g"
+        }
     }
+
+
+    productFlavors {
+        fastBuild {
+            minSdkVersion 21 //faster build times
+        }
+        regular {
+            // The regular minSdkVersion you use in your application
+            minSdkVersion 17
+        }
+    }
+
+
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            if (file != null && file.name.endsWith('.apk')) {
+                def suffix = "_" + defaultConfig.applicationId + "_" + defaultConfig.versionName + "_" + defaultConfig.versionCode
+                def outputFileName = file.name.replace(".apk", suffix + ".apk")
+                output.outputFile = new File(file.parent, outputFileName)
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            lintOptions {
+                disable 'MissingTranslation'
+            }
+            /**
+             * If we have signingconfig for this buildType we'll use it here
+             * this block should be added to every buildtype that needs signing
+             */
+            if (signingConfigs.hasProperty("release")) {
+                signingConfig signingConfigs.release
+            }
         }
     }
+
+    /*configurations.all {
+        resolutionStrategy {
+            force 'com.android.support:design:23.4.0'
+            force 'com.android.support:support-v4:23.4.0'
+            force 'com.android.support:appcompat-v7:23.4.0'
+        }
+    }*/
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+
+    //Parse and Bolts
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
+
+    //Realm adapters
+
+    //Dialogs
+
+    compile('com.mikepenz:materialdrawer:5.8.0@aar') {
+        transitive = true
+    }
+
+    /*voor versies ouder dan 19*/
+
+    //expanding view
+
+
+    compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:cardview-v7:25.2.0'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:support-v4:25.2.0'
+    compile 'com.github.orhanobut:logger:1.12'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.pixplicity.easyprefs:library:1.8.1@aar'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
+    compile 'com.afollestad.material-dialogs:commons:0.9.0.1'
+    compile 'net.danlew:android.joda:2.9.5'
+    compile 'io.realm:android-adapters:1.4.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.ragunathjawahar:android-saripaar:android-saripaar-2.0.3'
+    compile 'com.yarolegovich:discrete-scrollview:1.0.3'
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    //discrete scrolling view
+    compile 'com.yarolegovich:discrete-scrollview:1.0.3'
+
 }
