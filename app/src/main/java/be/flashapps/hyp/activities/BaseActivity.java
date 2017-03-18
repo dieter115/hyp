@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import io.realm.Realm;
 
 public class BaseActivity extends AppCompatActivity {
@@ -12,8 +16,21 @@ public class BaseActivity extends AppCompatActivity {
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private static final String EXTRA_CUSTOM_TABS_SESSION = "android.support.customtabs.extra.SESSION";
     private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR";
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+//
+
+
+    public DatabaseReference getFireBaseDataBaseInstance() {
+        return mDatabase;
+    }
+
+    public FirebaseAuth getFireBaseAuthInstance() {
+            return mAuth;
+    }
 
     Snackbar snackbar;
+
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
@@ -31,8 +48,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mRealm= Realm.getDefaultInstance();
-
+        mRealm = Realm.getDefaultInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth=FirebaseAuth.getInstance();
     }
 
     @Override
@@ -43,14 +61,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-
-    public Realm getRealm(){
+    public Realm getRealm() {
         return mRealm;
     }
-
-
-
-
 
 
 }

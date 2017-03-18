@@ -31,6 +31,10 @@ def versionMinor = 0
 def versionPatch = 0
 def versionBuild = 0
 
+
+def facebook_application_id=1234567890123456
+
+
 /**
  * Check if a signing.gradle file exists and import it
  */
@@ -42,7 +46,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "be.appwise.centerparcs"
+        applicationId "be.flashapps.hyp"
         minSdkVersion 17
         targetSdkVersion 23
 
@@ -84,7 +88,7 @@ android {
             }
         }
     }
-
+    project.ext.facebook_application_id=1234567890123456
     buildTypes {
         release {
             minifyEnabled false
@@ -92,6 +96,8 @@ android {
             lintOptions {
                 disable 'MissingTranslation'
             }
+
+            
             /**
              * If we have signingconfig for this buildType we'll use it here
              * this block should be added to every buildtype that needs signing
@@ -99,6 +105,9 @@ android {
             if (signingConfigs.hasProperty("release")) {
                 signingConfig signingConfigs.release
             }
+        }
+        debug{
+
         }
     }
 
@@ -132,14 +141,18 @@ dependencies {
 
     //expanding view
 
+    //discrete scrolling view
+    compile 'com.yarolegovich:discrete-scrollview:1.0.3'
+
+
 
     compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:cardview-v7:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
+    compile 'com.android.support:cardview-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:support-v4:25.3.0'
     compile 'com.github.orhanobut:logger:1.12'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.pixplicity.easyprefs:library:1.8.1@aar'
@@ -155,10 +168,14 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.ragunathjawahar:android-saripaar:android-saripaar-2.0.3'
     compile 'com.yarolegovich:discrete-scrollview:1.0.3'
+
+    //firebase
+    compile 'com.google.firebase:firebase-core:10.2.0'
+    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-auth:10.2.0'
+
     testCompile 'junit:junit:4.12'
     androidTestCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    //discrete scrolling view
-    compile 'com.yarolegovich:discrete-scrollview:1.0.3'
-
 }
+apply plugin: 'com.google.gms.google-services'

@@ -1,9 +1,15 @@
 package be.flashapps.hyp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -12,18 +18,20 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.orhanobut.logger.Logger;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import be.flashapps.hyp.Helper_Fragments;
 import be.flashapps.hyp.R;
 import be.flashapps.hyp.fragments.RecipieFragment;
+import be.flashapps.hyp.models.Recipe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class MainActivity extends BaseActivity {
     public static final int IDENTIFIER_HYP = 0, IDENTIFIER_SHOPPINGLIST = 1, IDENTIFIER_ALLERGIES = 2, IDENTIFIER_CARREFOURGO = 3, IDENTIFIER_SETTINGS = 4, IDENTIFIER_LOGOUT = 5;
-    private static final String TAG ="MAINTAG";
+    private static final String TAG = "MAINTAG";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     Drawer drawer;
@@ -31,6 +39,7 @@ public class MainActivity extends BaseActivity {
     Realm realm;
 
     RecipieFragment recipieFragment;
+    private DatabaseReference fireBaseInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +50,59 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         realm = getRealm();
 
+        fireBaseInstance = getFireBaseDataBaseInstance();
+        Query getAllrecipesQuery = fireBaseInstance.child("recipes").orderByChild("id");
+        getAllrecipesQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Recipe recipe = dataSnapshot.getValue(Recipe.class);
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(recipe);
+                    }
+                });
+                /*Logger.d("recipe added " + recipe.getNaam());*/
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                final Recipe recipe = dataSnapshot.getValue(Recipe.class);
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(recipe);
+
+                    }
+                });
+                /*Logger.d("recipe changed " + recipe.getNaam());*/
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                final Recipe recipe = dataSnapshot.getValue(Recipe.class);
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        /*realm.where(Recipe.class).equalTo("id", recipe.getId()).findFirst().deleteFromRealm();*/
+                    }
+                });
+                /*Logger.d("recipe changed " + recipe.getNaam());*/
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Logger.d("Failed to read value.", databaseError.toException());
+            }
+        });
 
         fixSideMenu();
     }
-
 
 
     public void fixSideMenu() {
@@ -92,10 +150,10 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem.getIdentifier() == IDENTIFIER_HYP) {
-                            if(recipieFragment==null)
-                                recipieFragment=RecipieFragment.newInstance("","");
+                            if (recipieFragment == null)
+                                recipieFragment = RecipieFragment.newInstance("", "");
 
-                            Helper_Fragments.replaceFragment(MainActivity.this,recipieFragment,false,TAG);
+                            Helper_Fragments.replaceFragment(MainActivity.this, recipieFragment, false, TAG);
                         }
 
                         if (drawerItem.getIdentifier() == IDENTIFIER_ALLERGIES) {
@@ -118,10 +176,19 @@ public class MainActivity extends BaseActivity {
                                     realm.where(UploadQuestion.class).findAll().deleteAllFromRealm();
                                 }
                             });*/
+
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+
+                                    realm.delete(Recipe.class);
+                                }
+                            });
+                            getFireBaseAuthInstance().signOut();
                             Prefs.clear();
-                            /*Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(intent);
-                            finish();*/
+                            finish();
                         }
                         return false;
                     }

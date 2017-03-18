@@ -57,4 +57,9 @@ public class Helper_Fragments {
 
         return activity.getSupportFragmentManager().findFragmentByTag(TAG);
     }
+
+    public static class Observable {
+        // Dummy class required for Jackson-Databind support if
+        // RxJava is not a project dependency.
+    }
 }

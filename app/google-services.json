@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "853883867775",
+    "firebase_url": "https://koken-met-hyp-93460.firebaseio.com",
+    "project_id": "koken-met-hyp-93460",
+    "storage_bucket": "koken-met-hyp-93460.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853883867775:android:175a0f7fcd9f263b",
+        "android_client_info": {
+          "package_name": "be.flashapps.hyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853883867775-9qsu5d1kinuocssl75lb72i74g2gihk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFulDFgrFnDmHtbj1zBRtWnl9SdZOHAdA"
+        },
+        {
+          "current_key": "AIzaSyCJONFMuvZGrAJW1yjj-i4i3NnWGvpHg38"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853883867775:android:ff0a1270c9e8f499",
+        "android_client_info": {
+          "package_name": "be.appwise.centerparcs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853883867775-ueu8odlr1jmhfpelvesq9dqvjhkg69cp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.appwise.centerparcs",
+            "certificate_hash": "ba892949aa9e075c5dd283883a52af5133969532"
+          }
+        },
+        {
+          "client_id": "853883867775-9qsu5d1kinuocssl75lb72i74g2gihk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFulDFgrFnDmHtbj1zBRtWnl9SdZOHAdA"
+        },
+        {
+          "current_key": "AIzaSyCJONFMuvZGrAJW1yjj-i4i3NnWGvpHg38"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853883867775-9qsu5d1kinuocssl75lb72i74g2gihk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,11 +3,10 @@ package be.flashapps.hyp.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 
-public class Recipe extends RealmObject {
+public class Recipe2 {
     @PrimaryKey
     private int id;
     @SerializedName("Naam")
@@ -43,12 +42,12 @@ public class Recipe extends RealmObject {
 
 
 
-    public Recipe() {
+    public Recipe2() {
 
     }
 
 
-    public Recipe(int id, String name, String afbeelding){
+    public Recipe2(int id, String name, String afbeelding){
         setId(id);
         setNaam(name);
         setAfbeelding(afbeelding);

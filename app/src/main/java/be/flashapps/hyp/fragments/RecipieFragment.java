@@ -82,18 +82,22 @@ public class RecipieFragment extends Fragment {
         ButterKnife.bind(this,root);
         realm=((BaseActivity)mActivity).getRealm();
 
-        final Recipe recipe=new Recipe(1,"pizza");
-        final Recipe recipe1=new Recipe(2,"spaghetti");
-        final Recipe recipe2=new Recipe(3,"worst met stoemp");
 
-        realm.executeTransaction(new Realm.Transaction() {
+
+       /* realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
+
+                Recipe recipe=new Recipe(1,"pizza","https://simplyyou.carrefour.eu/sites/simplyyou.carrefour.eu/files/styles/10_column_1_2/public/recipes/_pizza_aux_epinards_ricotta_et_parmesan.jpg?itok=CREaLUBC&timestamp=1468499964");
+                Recipe recipe1=new Recipe(2,"spaghetti","https://simplyyou.carrefour.eu/sites/simplyyou.carrefour.eu/files/styles/10_column_1_2/public/recipes/_pizza_aux_epinards_ricotta_et_parmesan.jpg?itok=CREaLUBC&timestamp=1468499964");
+                Recipe recipe2=new Recipe(3,"worst met stoemp","jdjdjdjdjdj");
+
+
                 realm.copyToRealmOrUpdate(recipe);
                 realm.copyToRealmOrUpdate(recipe1);
                 realm.copyToRealmOrUpdate(recipe2);
             }
-        });
+        });*/
 
         recipeAdapter=new RecipeRealmAdapter(App.getContext(),realm.where(Recipe.class).findAll(),true,mActivity);
         discreteScrollView.setAdapter(recipeAdapter);

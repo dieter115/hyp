@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="be.flashapps.hyp">
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -12,9 +17,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b335fdc659a24bbd70a52d2f6d48c80da84bce77" />
+
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme">
+
+        </activity>
+
+        <activity android:name=".activities.LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

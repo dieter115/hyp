@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import be.flashapps.hyp.R;
 import be.flashapps.hyp.activities.BaseActivity;
@@ -57,7 +60,11 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
             RecipeViewHolder recipeViewHolder=((RecipeViewHolder)holder);
             Recipe recipe = getData().get(position);
 
-            recipeViewHolder.tvRecipeName.setText(recipe.getName());
+            recipeViewHolder.tvRecipeName.setText(recipe.getNaam());
+
+            Glide.with(mActivity)
+                    .load(recipe.getAfbeelding())
+                    .into(recipeViewHolder.image);
         }
         else{
             EmptyViewHolder emptyViewHolder=(EmptyViewHolder)holder;
@@ -68,6 +75,8 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
     public static class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tv_recipe_name)
         TextView tvRecipeName;
+        @BindView(R.id.image)
+        ImageView image;
         public RecipeViewHolder(View itemView, OnRecipeClickListener onClickListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
