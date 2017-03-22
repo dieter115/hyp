@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="be.flashapps.hyp.fragments.RecipieFragment"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/spacing_normal"
+    android:paddingTop="@dimen/spacing_normal">
+
+    <CheckBox
+        android:id="@+id/cb_gluten"
+        android:text="Gluten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_lactose"
+        android:text="Lactose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_Suiker"
+        android:text="Suiker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_koolhydraten"
+        android:text="Koolhydraten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_vegetarisch"
+        android:text="Vegetarisch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_veganistisch"
+        android:text="Veganistisch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/cb_andere"
+        android:text="Andere..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>

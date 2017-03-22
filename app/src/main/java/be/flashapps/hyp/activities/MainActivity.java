@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +24,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import be.flashapps.hyp.Helper_Fragments;
 import be.flashapps.hyp.R;
+import be.flashapps.hyp.fragments.AllergiesFragment;
 import be.flashapps.hyp.fragments.RecipieFragment;
 import be.flashapps.hyp.models.Recipe;
 import butterknife.BindView;
@@ -37,9 +39,10 @@ public class MainActivity extends BaseActivity {
     Drawer drawer;
 
     Realm realm;
-
+    FirebaseUser firebaseUser;
     RecipieFragment recipieFragment;
     private DatabaseReference fireBaseInstance;
+    private AllergiesFragment allergyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         realm = getRealm();
 
+        firebaseUser=getFireBaseAuthInstance().getCurrentUser();
         fireBaseInstance = getFireBaseDataBaseInstance();
         Query getAllrecipesQuery = fireBaseInstance.child("recipes").orderByChild("id");
         getAllrecipesQuery.addChildEventListener(new ChildEventListener() {
@@ -62,7 +66,7 @@ public class MainActivity extends BaseActivity {
                         realm.copyToRealmOrUpdate(recipe);
                     }
                 });
-                /*Logger.d("recipe added " + recipe.getNaam());*/
+                Logger.d("recipe added " + recipe.getNaam());
             }
 
             @Override
@@ -75,7 +79,7 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
-                /*Logger.d("recipe changed " + recipe.getNaam());*/
+                Logger.d("recipe changed " + recipe.getNaam());
             }
 
             @Override
@@ -84,10 +88,10 @@ public class MainActivity extends BaseActivity {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        /*realm.where(Recipe.class).equalTo("id", recipe.getId()).findFirst().deleteFromRealm();*/
+                        realm.where(Recipe.class).equalTo("id", recipe.getId()).findFirst().deleteFromRealm();
                     }
                 });
-                /*Logger.d("recipe changed " + recipe.getNaam());*/
+                Logger.d("recipe changed " + recipe.getNaam());
             }
 
             @Override
@@ -121,7 +125,7 @@ public class MainActivity extends BaseActivity {
                 /*.withHeaderBackground(R.drawable.centerparcs_logo)*/
                 .withSelectionListEnabledForSingleProfile(false)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Beveiligingsafdeling").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.gray_circle))
+                        new ProfileDrawerItem().withName(firebaseUser.getDisplayName()).withEmail(firebaseUser.getEmail()).withIcon(firebaseUser.getPhotoUrl())
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -157,6 +161,10 @@ public class MainActivity extends BaseActivity {
                         }
 
                         if (drawerItem.getIdentifier() == IDENTIFIER_ALLERGIES) {
+                            if (allergyFragment == null)
+                                allergyFragment = AllergiesFragment.newInstance("", "");
+
+                            Helper_Fragments.replaceFragment(MainActivity.this, allergyFragment, false, TAG);
 
                         }
                         if (drawerItem.getIdentifier() == IDENTIFIER_CARREFOURGO) {

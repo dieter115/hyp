@@ -3,10 +3,13 @@ package be.flashapps.hyp.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.Pivot;
@@ -22,7 +25,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 
-public class RecipieFragment extends Fragment {
+public class RecipieFragment extends Fragment implements DiscreteScrollView.CurrentItemChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,6 +39,9 @@ public class RecipieFragment extends Fragment {
     @BindView(R.id.discretescrollingview)
     DiscreteScrollView discreteScrollView;
     private RecipeRealmAdapter recipeAdapter;
+
+    @BindView(R.id.recipe_name)
+    TextView currentItemName;
 
     public RecipieFragment() {
         // Required empty public constructor
@@ -84,22 +90,8 @@ public class RecipieFragment extends Fragment {
 
 
 
-       /* realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-
-                Recipe recipe=new Recipe(1,"pizza","https://simplyyou.carrefour.eu/sites/simplyyou.carrefour.eu/files/styles/10_column_1_2/public/recipes/_pizza_aux_epinards_ricotta_et_parmesan.jpg?itok=CREaLUBC&timestamp=1468499964");
-                Recipe recipe1=new Recipe(2,"spaghetti","https://simplyyou.carrefour.eu/sites/simplyyou.carrefour.eu/files/styles/10_column_1_2/public/recipes/_pizza_aux_epinards_ricotta_et_parmesan.jpg?itok=CREaLUBC&timestamp=1468499964");
-                Recipe recipe2=new Recipe(3,"worst met stoemp","jdjdjdjdjdj");
-
-
-                realm.copyToRealmOrUpdate(recipe);
-                realm.copyToRealmOrUpdate(recipe1);
-                realm.copyToRealmOrUpdate(recipe2);
-            }
-        });*/
-
         recipeAdapter=new RecipeRealmAdapter(App.getContext(),realm.where(Recipe.class).findAll(),true,mActivity);
+        discreteScrollView.setCurrentItemChangeListener(this);
         discreteScrollView.setAdapter(recipeAdapter);
         discreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
                 .setMaxScale(1.0f)
@@ -109,5 +101,54 @@ public class RecipieFragment extends Fragment {
                 .build());
 
         return root;
+    }
+
+
+   /* @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.item_btn_rate:
+                Item current = data.get(itemPicker.getCurrentItem());
+                shop.setRated(current.getId(), !shop.isRated(current.getId()));
+                changeRateButtonState(current);
+                break;
+            case R.id.home:
+                finish();
+                break;
+            case R.id.btn_transition_time:
+                DiscreteScrollViewOptions.configureTransitionTime(itemPicker);
+                break;
+            case R.id.btn_smooth_scroll:
+                DiscreteScrollViewOptions.smoothScrollToUserSelectedPosition(itemPicker, v);
+                break;
+            default:
+                showUnsupportedSnackBar();
+                break;
+        }
+    }*/
+
+    private void onItemChanged(Recipe recipe) {
+        currentItemName.setText(recipe.getNaam());
+        /*currentItemPrice.setText(item.getPrice());*/
+        /*changeRateButtonState(item);*/
+    }
+
+    /*private void changeRateButtonState(Recipe recipe) {
+        if (recipe.isRated(recipe.getId())) {
+            rateItemButton.setImageResource(R.drawable.ic_star_black_24dp);
+            rateItemButton.setColorFilter(ContextCompat.getColor(this, R.color.shopRatedStar));
+        } else {
+            rateItemButton.setImageResource(R.drawable.ic_star_border_black_24dp);
+            rateItemButton.setColorFilter(ContextCompat.getColor(this, R.color.shopSecondary));
+        }
+    }*/
+
+    @Override
+    public void onCurrentItemChanged(RecyclerView.ViewHolder viewHolder, int position) {
+        onItemChanged(recipeAdapter.getData().get(position));
+    }
+
+    private void showUnsupportedSnackBar() {
+        Snackbar.make(discreteScrollView, "Unsupported click", Snackbar.LENGTH_SHORT).show();
     }
 }

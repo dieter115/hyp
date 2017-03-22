@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_margin="4dp">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -23,13 +23,9 @@
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/tv_recipe_name"
@@ -41,7 +37,7 @@
                 android:textSize="@dimen/font_larger"
                 tools:text="Recept dit dat" />
 
-        </LinearLayout>
+        </FrameLayout>
 
     </android.support.v7.widget.CardView>
 

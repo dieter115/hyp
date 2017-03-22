@@ -60,8 +60,6 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
             RecipeViewHolder recipeViewHolder=((RecipeViewHolder)holder);
             Recipe recipe = getData().get(position);
 
-            recipeViewHolder.tvRecipeName.setText(recipe.getNaam());
-
             Glide.with(mActivity)
                     .load(recipe.getAfbeelding())
                     .into(recipeViewHolder.image);
@@ -73,8 +71,6 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tv_recipe_name)
-        TextView tvRecipeName;
         @BindView(R.id.image)
         ImageView image;
         public RecipeViewHolder(View itemView, OnRecipeClickListener onClickListener) {
