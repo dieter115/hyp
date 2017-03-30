@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_message"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="be.flashapps.hyp.activities.MessageActivity">
+
+
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/input"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/input"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/spacing_small"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_large" >
+
+
+        <EditText
+            android:id="@+id/et_message_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:hint="Typ een bericht"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/iv_send_message"
+            android:clickable="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/spacing_small"
+            android:src="@drawable/ic_send_black_24dp"/>
+
+
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

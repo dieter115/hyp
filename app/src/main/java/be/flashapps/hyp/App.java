@@ -3,8 +3,14 @@ package be.flashapps.hyp;
 import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.multidex.MultiDex;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
+import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.orhanobut.logger.Logger;
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -52,6 +58,19 @@ public class App extends Application {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(config);
+
+
+        DrawerImageLoader.init(new AbstractDrawerImageLoader() {
+            @Override
+            public void set(ImageView imageView, Uri uri, Drawable placeholder) {
+                Glide.with(imageView.getContext()).load(uri).placeholder(placeholder).into(imageView);
+            }
+
+            @Override
+            public void cancel(ImageView imageView) {
+                Glide.clear(imageView);
+            }
+        });
 
 
     }

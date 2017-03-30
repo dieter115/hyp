@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -16,7 +17,9 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -31,6 +34,8 @@ import be.flashapps.hyp.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.orhanobut.logger.Logger.d;
 
 public class LoginActivity extends BaseActivity {
     private FirebaseAuth mAuth;
@@ -75,10 +80,10 @@ public class LoginActivity extends BaseActivity {
                     // User is signed in
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();
-                    Logger.d("onAuthStateChanged:signed_in:" + user.getUid());
+                    d("onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Logger.d("onAuthStateChanged:signed_out");
+                    d("onAuthStateChanged:signed_out");
                 }
                 // ...
             }
@@ -112,7 +117,8 @@ public class LoginActivity extends BaseActivity {
 
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions("email", "public_profile");
+
         // Other app specific specialization
 
         callbackManager = CallbackManager.Factory.create();
@@ -122,34 +128,17 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 loginResult.getAccessToken();
+                handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-
+                Logger.d("facebook login canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
-
-            }
-        });
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
+                Logger.d("facebook error "+error.getMessage() + " " +error.getLocalizedMessage());
             }
         });
     }
@@ -190,13 +179,13 @@ public class LoginActivity extends BaseActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Logger.d("signInWithEmail:onComplete:" + task.isSuccessful());
+                        d("signInWithEmail:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Logger.d("signInWithEmail:failed"+ task.getException());
+                            d("signInWithEmail:failed"+ task.getException());
                             Toast.makeText(LoginActivity.this, "authentication failed login",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -209,6 +198,34 @@ public class LoginActivity extends BaseActivity {
                     }
                 });
 
+    }
+
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        d("handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Logger.d("signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Logger.d("signInWithCredential", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                            finish();
+                        }
+
+                        // ...
+                    }
+                });
     }
 
 

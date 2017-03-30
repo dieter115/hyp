@@ -178,5 +178,7 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.github.stfalcon:chatkit:0.1.2'
+
 }
 apply plugin: 'com.google.gms.google-services'

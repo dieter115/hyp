@@ -9,12 +9,12 @@
     android:gravity="center">
 
     <android.support.v7.widget.CardView
-        android:layout_width="200dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="4dp">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -24,20 +24,119 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/etediepizzajongen" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:background="@color/recipe_brown" />
+
+
+            <TextView
+                android:id="@+id/tv_recipe_kind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/recipe_red"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/spacing_small"
+                android:textColor="@color/md_white_1000"
+                android:textSize="@dimen/font_larger"
+                tools:text="Recept dit dat" />
 
 
             <TextView
                 android:id="@+id/tv_recipe_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
+                android:layout_below="@id/tv_recipe_kind"
                 android:gravity="center_horizontal"
-                android:textColor="@color/md_black_1000"
+                android:padding="@dimen/spacing_small"
+                android:textColor="@color/md_white_1000"
                 android:textSize="@dimen/font_larger"
                 tools:text="Recept dit dat" />
 
-        </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/tv_recipe_name"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_small">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/spacing_normal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_access_alarm_black_24dp"
+                        android:tint="@color/md_white_1000" />
+
+                    <TextView
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:id="@+id/tv_cooking_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/md_white_1000"
+                        tools:text="15 min" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/spacing_normal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_chefshat"
+                        android:tint="@color/md_white_1000" />
+
+                    <TextView
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:id="@+id/tv_difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/md_white_1000"
+                        tools:text="moeilijk" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/spacing_normal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_pricetag"
+                        android:tint="@color/md_white_1000" />
+
+                    <TextView
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:id="@+id/tv_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/md_white_1000"
+                        tools:text="€€€" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

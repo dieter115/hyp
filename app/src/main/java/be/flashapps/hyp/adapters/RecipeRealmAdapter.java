@@ -56,16 +56,23 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof RecipeViewHolder) {
-            RecipeViewHolder recipeViewHolder=((RecipeViewHolder)holder);
+        if (holder instanceof RecipeViewHolder) {
+            RecipeViewHolder recipeViewHolder = ((RecipeViewHolder) holder);
             Recipe recipe = getData().get(position);
 
             Glide.with(mActivity)
                     .load(recipe.getAfbeelding())
                     .into(recipeViewHolder.image);
-        }
-        else{
-            EmptyViewHolder emptyViewHolder=(EmptyViewHolder)holder;
+
+            recipeViewHolder.tvRecipeKind.setText(recipe.getCategorie());
+            /*recipeViewHolder.tvRecipeName.setText(recipe.getNaam());*/
+            recipeViewHolder.tvCookingTime.setText(recipe.getVoorbereidingstijd() + " + " + recipe.getBereidingstijd());
+            recipeViewHolder.tvDifficulty.setText(recipe.getMoeilijkheidsgraad());
+            recipeViewHolder.tvPrice.setText(recipe.getPrijs());
+
+
+        } else {
+            EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
             emptyViewHolder.tvEmptyMessage.setText("Er werden geen gerechten gevonden");
         }
     }
@@ -73,6 +80,17 @@ public class RecipeRealmAdapter extends RealmRecyclerViewAdapter<Recipe, Recycle
     public static class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.image)
         ImageView image;
+        @BindView(R.id.tv_recipe_name)
+        TextView tvRecipeName;
+        @BindView(R.id.tv_recipe_kind)
+        TextView tvRecipeKind;
+        @BindView(R.id.tv_cooking_time)
+        TextView tvCookingTime;
+        @BindView(R.id.tv_difficulty)
+        TextView tvDifficulty;
+        @BindView(R.id.tv_price)
+        TextView tvPrice;
+
         public RecipeViewHolder(View itemView, OnRecipeClickListener onClickListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);

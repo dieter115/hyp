@@ -7,12 +7,9 @@
     android:orientation="vertical">
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"/>
-
     <TextView
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:id="@+id/recipe_name"
         android:layout_width="350dp"
         android:layout_height="60dp"
@@ -27,14 +24,16 @@
     <com.yarolegovich.discretescrollview.DiscreteScrollView
         android:id="@+id/discretescrollingview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/spacing_normal">
 
         <ImageView
             android:id="@+id/item_btn_comment"
@@ -55,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star_black_24dp"
+            app:backgroundTint="@color/recipe_red"
             android:tint="@android:color/white"
             app:rippleColor="@color/primary"
             app:useCompatPadding="true" />
@@ -74,10 +74,5 @@
             android:visibility="gone"/>
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"/>
 
 </LinearLayout>

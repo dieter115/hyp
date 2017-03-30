@@ -145,6 +145,7 @@ public class RecipieFragment extends Fragment implements DiscreteScrollView.Curr
 
     @Override
     public void onCurrentItemChanged(RecyclerView.ViewHolder viewHolder, int position) {
+        if(viewHolder instanceof RecipeRealmAdapter.RecipeViewHolder)
         onItemChanged(recipeAdapter.getData().get(position));
     }
 

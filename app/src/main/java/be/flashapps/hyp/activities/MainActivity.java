@@ -26,10 +26,13 @@ import be.flashapps.hyp.Helper_Fragments;
 import be.flashapps.hyp.R;
 import be.flashapps.hyp.fragments.AllergiesFragment;
 import be.flashapps.hyp.fragments.RecipieFragment;
+import be.flashapps.hyp.models.Conversation;
+import be.flashapps.hyp.models.Question;
 import be.flashapps.hyp.models.Recipe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 public class MainActivity extends BaseActivity {
     public static final int IDENTIFIER_HYP = 0, IDENTIFIER_SHOPPINGLIST = 1, IDENTIFIER_ALLERGIES = 2, IDENTIFIER_CARREFOURGO = 3, IDENTIFIER_SETTINGS = 4, IDENTIFIER_LOGOUT = 5;
@@ -53,7 +56,10 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         realm = getRealm();
 
-        firebaseUser=getFireBaseAuthInstance().getCurrentUser();
+
+        makeConversation();
+
+        firebaseUser = getFireBaseAuthInstance().getCurrentUser();
         fireBaseInstance = getFireBaseDataBaseInstance();
         Query getAllrecipesQuery = fireBaseInstance.child("recipes").orderByChild("id");
         getAllrecipesQuery.addChildEventListener(new ChildEventListener() {
@@ -108,6 +114,32 @@ public class MainActivity extends BaseActivity {
         fixSideMenu();
     }
 
+    public void makeConversation() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                Question question = new Question(1,false, getString(R.string.thankyou_question), null);
+                question.setAuthor(getHypUser());
+
+                Question question2 = new Question(2,false, getString(R.string.thankyou_question), null);
+                question2.setAuthor(getLoggedInUser());
+
+
+                RealmList<Question> questions = new RealmList<Question>();
+                questions.add(question);
+                questions.add(question2);
+
+                Conversation conversation = new Conversation();
+                conversation.setId(1);
+                conversation.setFilledIn(false);
+                conversation.setQuestion(questions);
+
+                realm.copyToRealmOrUpdate(conversation);
+            }
+        });
+    }
+
 
     public void fixSideMenu() {
         PrimaryDrawerItem hypDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_HYP).withName("Praat met Hyp");
@@ -115,7 +147,7 @@ public class MainActivity extends BaseActivity {
         PrimaryDrawerItem allergyDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_ALLERGIES).withName("Allergieën");
         PrimaryDrawerItem settingsDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_SETTINGS).withName("Instellingen");
         final PrimaryDrawerItem logoutDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_LOGOUT).withName("Uitloggen");
-        PrimaryDrawerItem carrefourGoDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_CARREFOURGO).withName("Carrefour Go");
+        PrimaryDrawerItem carrefourGoDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_CARREFOURGO).withName("Carrefour Drive");
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -135,8 +167,6 @@ public class MainActivity extends BaseActivity {
                 })
                 .build();
 
-        headerResult.getView().findViewById(R.id.material_drawer_account_header_current).setVisibility(View.GONE);//volledig hiden van profile bezel image view in header.xml
-
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
@@ -154,10 +184,14 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem.getIdentifier() == IDENTIFIER_HYP) {
-                            if (recipieFragment == null)
-                                recipieFragment = RecipieFragment.newInstance("", "");
-
-                            Helper_Fragments.replaceFragment(MainActivity.this, recipieFragment, false, TAG);
+                            if (realm.where(Conversation.class).equalTo("filledIn", false).findFirst() != null) {
+                                Intent intent=new Intent(MainActivity.this,MessageActivity.class);
+                                startActivity(intent);
+                            } else {
+                                if (recipieFragment == null)
+                                    recipieFragment = RecipieFragment.newInstance("", "");
+                                Helper_Fragments.replaceFragment(MainActivity.this, recipieFragment, false, TAG);
+                            }
                         }
 
                         if (drawerItem.getIdentifier() == IDENTIFIER_ALLERGIES) {
